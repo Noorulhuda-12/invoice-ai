@@ -2,11 +2,13 @@
  * API utility functions for communicating with the Flask backend.
  */
 
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 export async function uploadInvoice(file) {
   const formData = new FormData();
   formData.append('file', file);
 
-  const response = await fetch('/api/upload', {
+  const response = await fetch(`${API_BASE}/api/upload`, {
     method: 'POST',
     body: formData,
   });
@@ -20,7 +22,7 @@ export async function uploadInvoice(file) {
 }
 
 export async function getInvoiceHistory() {
-  const response = await fetch('/api/history');
+  const response = await fetch(`${API_BASE}/api/history`);
   if (!response.ok) {
     throw new Error(`Failed to fetch history: ${response.statusText}`);
   }
@@ -28,7 +30,7 @@ export async function getInvoiceHistory() {
 }
 
 export async function getInvoiceDetails(invoiceId) {
-  const response = await fetch(`/api/invoice/${invoiceId}`);
+  const response = await fetch(`${API_BASE}/api/invoice/${invoiceId}`);
   if (!response.ok) {
     throw new Error(`Failed to fetch invoice details: ${response.statusText}`);
   }
@@ -36,7 +38,7 @@ export async function getInvoiceDetails(invoiceId) {
 }
 
 export async function getVendorDetails(vendorName) {
-  const response = await fetch(`/api/vendor/${encodeURIComponent(vendorName)}`);
+  const response = await fetch(`${API_BASE}/api/vendor/${encodeURIComponent(vendorName)}`);
   if (!response.ok) {
     throw new Error(`Failed to fetch vendor: ${response.statusText}`);
   }
@@ -44,7 +46,7 @@ export async function getVendorDetails(vendorName) {
 }
 
 export async function getHealth() {
-  const response = await fetch('/api/health');
+  const response = await fetch(`${API_BASE}/api/health`);
   if (!response.ok) {
     throw new Error(`Health check failed: ${response.statusText}`);
   }
@@ -62,7 +64,7 @@ export async function getHealth() {
  */
 export async function chatStream(message, invoiceContext, onChunk, onDone, onError) {
   try {
-    const response = await fetch('/api/chat', {
+    const response = await fetch(`${API_BASE}/api/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -119,3 +121,4 @@ export async function chatStream(message, invoiceContext, onChunk, onDone, onErr
     onError(error);
   }
 }
+
